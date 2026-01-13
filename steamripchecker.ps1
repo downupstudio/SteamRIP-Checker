@@ -11,6 +11,7 @@ try {
 
     $gameDictionary = @{}
     $exactShortTitles = @()
+    $exceptions = @("wwe", "nba")
 
     $pattern = '<a[^>]+href="([^"]+)"[^>]*>([^<]+Free Download[^<]*)</a>'
     $allMatches = [regex]::Matches($htmlContent, $pattern, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
@@ -60,7 +61,11 @@ try {
 
         $cleanInput = $userInput.Trim().ToLower()
 
-        if ($cleanInput.Length -le 3) {
+        if ($cleanInput -eq "nba") {
+            $cleanInput = "nba 2k"
+        }
+
+        if ($cleanInput.Length -le 3 -and $exceptions -notcontains $userInput.ToLower()) {
             $isExactShortTitle = $false
             foreach ($shortTitle in $exactShortTitles) {
                 if ($shortTitle -eq $cleanInput) {
@@ -80,7 +85,7 @@ try {
         $foundGames = @()
 
         foreach ($gameKey in $gameDictionary.Keys) {
-            if ($gameKey.Contains($cleanInput)) {
+            if ($gameKey.StartsWith($cleanInput)) {
                 $foundGames += $gameDictionary[$gameKey]
             }
         }
