@@ -16,17 +16,20 @@ try {
     
     foreach ($match in $allMatches) {
         $linkUrl = $match.Groups[1].Value
-        $gameTitle = $match.Groups[2].Value
+        $fullTitle = $match.Groups[2].Value
         
-        $gameTitle = [System.Net.WebUtility]::HtmlDecode($gameTitle)
-        $gameTitle = $gameTitle -replace '\u2013', '-'
+        $fullTitle = [System.Net.WebUtility]::HtmlDecode($fullTitle)
+        $fullTitle = $fullTitle -replace '\u2013', '-'
+        
+        $cleanTitle = $fullTitle -replace '\s*Free Download\s*', ''
+        $searchTitle = $cleanTitle.ToLower()
         
         if (-not $linkUrl.StartsWith("http")) {
             $linkUrl = $baseUrl + $linkUrl
         }
         
-        $gameDictionary[$gameTitle.ToLower()] = @{
-            OriginalTitle = $gameTitle
+        $gameDictionary[$searchTitle] = @{
+            OriginalTitle = $cleanTitle
             Url = $linkUrl
         }
     }
