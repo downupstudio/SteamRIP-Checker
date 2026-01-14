@@ -85,7 +85,7 @@ try {
         $foundGames = @()
 
         foreach ($gameKey in $gameDictionary.Keys) {
-            if ($gameKey.StartsWith($cleanInput)) {
+            if ($gameKey.Contains($cleanInput)) {
                 $foundGames += $gameDictionary[$gameKey]
             }
         }
